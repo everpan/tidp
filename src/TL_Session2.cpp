@@ -178,6 +178,7 @@ static void defaultParseProtocol(char * buff, int len, TL_Session2& session) {
 		}
 	} else {
 		cout << "unknow protocol:" << packet->protocol_type << "|" << len << "|" << buff << endl;
+		packet->recv_data.clear();
 	}
 }
 

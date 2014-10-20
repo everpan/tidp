@@ -36,7 +36,14 @@ int TL_Dimension::getLevelSize() {
 	}
 	return _level_size;
 }
-TL_Dimension::dim_id_t TL_Dimension::add(dim_bit_t bit, const char ** dimPtr) {
+
+TL_Dimension::dim_id_t TL_Dimension::add(dim_bit_t bit, const char ** dimPtr, int num) {
+	if (calByteBits(bit) != num) {
+		ostringstream os;
+		os << "TL_Dimension bitmap is not match key count:" << bit << ":" << calBits(bit) << "!=" << num;
+		throw TL_Exception(os.str(), -1);
+	}
+
 	map<dim_bit_t, map<vector<did_t>, did_t, TL_VecCmp<did_t> > >::iterator it = _dimmap.find(bit);
 	if (it == _dimmap.end()) {
 		_level_size = -1;
@@ -45,11 +52,8 @@ TL_Dimension::dim_id_t TL_Dimension::add(dim_bit_t bit, const char ** dimPtr) {
 	}
 	map<vector<did_t>, did_t, TL_VecCmp<did_t> > & dimmap = it->second;
 	vector<dim_id_t> dids;
-	int i = 0;
-	while (dimPtr[i] != NULL) {
-		//cout << "i:" << i << " " << *dimPtr << endl;
-		dids.push_back(_keys.add(dimPtr[i]));
-		++i;
+	while (--num > -1) {
+		dids.push_back(_keys.add(dimPtr[num]));
 	}
 
 	map<vector<did_t>, did_t, TL_VecCmp<did_t> >::iterator it2 = dimmap.find(dids);
@@ -63,6 +67,13 @@ TL_Dimension::dim_id_t TL_Dimension::add(dim_bit_t bit, const char ** dimPtr) {
 	return it2->second;
 }
 TL_Dimension::dim_id_t TL_Dimension::add(dim_bit_t bit, const vector<string> & dim) {
+	int num = dim.size();
+	if (calByteBits(bit) != num) {
+		ostringstream os;
+		os << "TL_Dimension bitmap is not match key count:" << bit << ":" << calBits(bit) << "!=" << num;
+		throw TL_Exception(os.str(), -1);
+	}
+
 	map<dim_bit_t, map<vector<did_t>, did_t, TL_VecCmp<did_t> > >::iterator it = _dimmap.find(bit);
 	if (it == _dimmap.end()) {
 		_level_size = -1;
@@ -83,6 +94,12 @@ TL_Dimension::dim_id_t TL_Dimension::add(dim_bit_t bit, const vector<string> & d
 	return it2->second;
 }
 TL_Dimension::dim_id_t TL_Dimension::add(const dim_struct & dim) {
+	int num = dim.dims.size();
+	if (calByteBits(dim.bit) != num) {
+		ostringstream os;
+		os << "TL_Dimension bitmap is not match key count:" << dim.bit << ":" << calBits(dim.bit) << "!=" << num;
+		throw TL_Exception(os.str(), -1);
+	}
 	map<dim_bit_t, map<vector<did_t>, did_t, TL_VecCmp<did_t> > >::iterator it = _dimmap.find(dim.bit);
 	if (it == _dimmap.end()) {
 		_level_size = -1;

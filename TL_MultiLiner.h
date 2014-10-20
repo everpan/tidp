@@ -12,10 +12,10 @@
 #include <map>
 #include <set>
 #include <string>
-
+#include <stdint.h>
 using namespace std;
 namespace tidp {
-typedef unsigned int uint32_t;
+//typedef unsigned int uint32_t;
 
 static const unsigned char CHAR_BIT_CNT_TABLE[256] = { 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4, 1, 2, 2, 3, 2, 3,
 		3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4,
@@ -25,9 +25,6 @@ static const unsigned char CHAR_BIT_CNT_TABLE[256] = { 0, 1, 1, 2, 1, 2, 2, 3, 1
 		4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5,
 		6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 4, 5, 5, 6,
 		5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8 };
-
-
-
 
 template<class T>
 class TL_MulitLiner {
@@ -73,7 +70,7 @@ public:
 
 	uint32_t getCombinaMembers(uint32_t bitpos, set<vector<T> >);
 
-	void get(const set<uint32_t>& uids,map<uint32_t,string> uid_names);
+	void get(const set<uint32_t>& uids, map<uint32_t, string> uid_names);
 
 	uint32_t getUid() {
 		//return __sync_fetch_and_add(&_uid, 1);

@@ -11,7 +11,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
-
+#include <sstream>
+#include "TL_Exp.h"
 #include "TL_KeyLiner.h"
 static const unsigned char CHAR_BIT_CNT_TABLE[256] = { // 0
 		0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4, //1
@@ -31,6 +32,10 @@ static const unsigned char CHAR_BIT_CNT_TABLE[256] = { // 0
 				3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, //f
 				4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8 //0
 		};
+//只对低8位取值，一般用于限定dimension的level不超过8个。
+inline int calByteBits(unsigned int a) {
+	return CHAR_BIT_CNT_TABLE[a & 0xFF];
+}
 inline int calBits(unsigned int a) {
 	unsigned char * p = (unsigned char *) &a;
 	return CHAR_BIT_CNT_TABLE[*p] + CHAR_BIT_CNT_TABLE[*(p + 1)] + CHAR_BIT_CNT_TABLE[*(p + 2)]
@@ -93,7 +98,7 @@ public:
 
 	int getLevelSize();
 
-	dim_id_t add(dim_bit_t, const char ** dimPtr); // last must be NULL
+	dim_id_t add(dim_bit_t, const char ** dimPtr, int num);
 	dim_id_t add(dim_bit_t, const vector<string> & dim);
 	dim_id_t add(const dim_struct & dim);
 	//根据维度值 获取编号

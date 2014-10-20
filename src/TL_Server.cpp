@@ -125,7 +125,13 @@ void TL_Server::run() {
 			}
 		}
 		for (int i = 0; i < ret; ++i) {
-			if ((_events[i].events & EPOLLIN)) {
+			if (_events[i].events & EPOLLERR) {
+				cout << "EPOLLERR:" << endl;
+				const TL_Session2Ptr& sessionPtr = *(TL_Session2Ptr*) _events[i].data.ptr;
+				epoll_ctl(_epfd, EPOLL_CTL_DEL, sessionPtr->getFd(), NULL);
+				removeSession(sessionPtr);
+				//sessionPtr->unregister();
+			} else if ((_events[i].events & EPOLLIN)) {
 				if (_events[i].data.fd == _sockfd) {
 					int client_sock = -1;
 					struct sockaddr client_addr;
@@ -154,12 +160,7 @@ void TL_Server::run() {
 					}
 				}
 			}
-			if (_events[i].events & EPOLLERR) {
-				cout << "EPOLLERR:" << endl;
-				const TL_Session2Ptr& sessionPtr = *(TL_Session2Ptr*) _events[i].data.ptr;
-				removeSession(sessionPtr);
-				//sessionPtr->unregister();
-			}
+
 		}
 	}
 	//ev_run(_loop, 0);
@@ -241,8 +242,8 @@ void TL_Server::removeSession(const TL_Session2Ptr& session) {
 	//cout << "rm Session:" << session->getSessionId() << "|" << session << "|" << _id_sessions.size() << "|"
 	//		<< session.use_count() << endl;
 	//Lock lk(*this);
-	cout << "rm Session:" << _id_sessions.size() << "|uc:" << session.use_count() << "|fd:" << session->getFd()
-			<< "|sid:" << session->getSessionId() << "|ascn:" << _id_sessions.size() - 1 << endl;
+	//cout << "rm Session:" << _id_sessions.size() << "|uc:" << session.use_count() << "|fd:" << session->getFd()
+	//		<< "|sid:" << session->getSessionId() << "|ascn:" << _id_sessions.size() - 1 << endl;
 	_id_sessions.erase(session->getSessionId());
 	session->close();
 	//cout << "rm Session:" << _id_sessions.size() << "|" << session.use_count() << endl;
@@ -261,15 +262,15 @@ TL_PacketPtr TL_Server::getPacket() {
 	//tidp::TL_ThreadDataPool<TL_Packet>::Lock lk(_data_pool);
 	TL_PacketPtr sp(_data_pool.get(), boost::bind(&TL_Server::release, this, _1));
 	sp->server = this;
-	cout << "getPacket:" << sp << endl;
+	//cout << "getPacket:" << sp << endl;
 	return sp;
 	/*
-	tidp::TL_ThreadDataPool<TL_Packet>::Lock lk(_data_pool);
-	TL_PacketPtr sp(_data_pool.getNoLock(), boost::bind(&TL_Server::release, this, _1));
-	sp->server = this;
-	cout << "getPacket:" << sp << endl;
-	return sp;
-	*/
+	 tidp::TL_ThreadDataPool<TL_Packet>::Lock lk(_data_pool);
+	 TL_PacketPtr sp(_data_pool.getNoLock(), boost::bind(&TL_Server::release, this, _1));
+	 sp->server = this;
+	 cout << "getPacket:" << sp << endl;
+	 return sp;
+	 */
 }
 
 void TL_Server::release(TL_Packet * data) {

@@ -3,6 +3,7 @@
  * Author: everpan
  *
  * Created on 2011年6月7日, 下午8:30
+ * modify on 2014.10.16 简单化，不做循环队列
  */
 //纯粹的内存cache 类似于string，无格式。
 //无锁版，多线程下需要自己额外加锁
@@ -13,29 +14,29 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
-
+#include <errno.h>
 #include <iostream>
+
+#include <TL_Exp.h>
+#define TL_MEMSTRING_DEFAULT_SIZE 512
 namespace tidp {
 class TL_MemString;
 typedef TL_MemString& (*TL_MemStringFUN)(TL_MemString& orig);
 
 class TL_MemString {
 public:
-
-	enum {
-		eStr = 1, eBit = 2
-	};
-
-	TL_MemString(size_t len) :
-			_addr(NULL), _top(0), _bot(0), _len(0), _isattache(false) {
-		//_split_char = 0;
-		if (len > 0) {
-			init(len);
-		}
+	/*
+	 enum {
+	 eStr = 1, eBit = 2
+	 };
+	 */
+	TL_MemString(size_t len)
+			: _addr(NULL), _used_len(0), _len(TL_MEMSTRING_DEFAULT_SIZE), _isattache(false) {
+		init(_len);
 	}
 
-	TL_MemString() :
-			_addr(NULL), _top(0), _bot(0), _len(512), _isattache(false) {
+	TL_MemString()
+			: _addr(NULL), _used_len(0), _len(TL_MEMSTRING_DEFAULT_SIZE), _isattache(false) {
 		init(_len);
 	}
 
@@ -43,15 +44,15 @@ public:
 	int init(size_t len);
 	int resize(size_t len);
 	//外界内存为cache
-	void attache(char* addr, size_t len);
+	//void attache(char* addr, size_t len);
 	bool isFull(const size_t &len);
 	bool isEmpty() const;
-	bool isDestory();
+	//bool isDestory();
 
 	void destory();
 	void clear();
-	//保留控件，free空间
-	size_t reserve();
+	//
+	//size_t reserve();
 	//使用空间
 	size_t size();
 	size_t capacity();
@@ -96,13 +97,10 @@ protected:
 	TL_MemString& operator =(const TL_MemString&);
 private:
 	char * _addr;
-	size_t _top;
-	size_t _bot;
+	size_t _used_len; //已使用大小
 	size_t _len;
 	bool _isattache;
-	int _mod;
 	char _tmp[64];
-	//char _split_char;
 };
 
 TL_MemString& endl(TL_MemString& orig);
