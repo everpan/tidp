@@ -1,160 +1,96 @@
 /*
- * File:   TL_Session.h
- * Author: everpan
+ * TL_Session.h
  *
- * Created on 2011年6月24日, 上午8:53
+ *  Created on: Jul 23, 2014
+ *      Author: ever
  */
 
-#ifndef TL_SESSION_H
-#define	TL_SESSION_H
-#include <string>
-#include <map>
-#include <list>
-#include <set>
-#include <string.h>
-#include "TL_Socket.h"
-#include "TL_Logger.h"
-#include "TL_ThreadLock.h"
-#include "TL_Exp.h"
+#ifndef TCONNECTSESSION_H_
+#define TCONNECTSESSION_H_
+#include <sys/types.h>
+#include <sys/uio.h>
 
+#include <unistd.h>
+#include <errno.h>
+#include <time.h>
+#include <stdlib.h>
+#include <iostream>
+#include <arpa/inet.h>
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
+#include <TL_ThreadLock.h>
+#include "TL_Packet.h"
+using namespace std;
+//struct ev_io;
 namespace tidp {
-
-class TL_SessionMgr;
+class TL_Server;
 class TL_Session;
+typedef boost::shared_ptr<TL_Session> TL_SessionPtr;
+#define RECV_BUFF_SIZE 2048
 
-//static int defaultPacketParse(TL_Session& session);
-//static int defaultAuthentication(TL_Session& session);
-
-typedef int (*Fn)(TL_Session& session);
-typedef int (*AFn)(TL_Session& session);
-
-class TL_Session {
+typedef void (ParseFunt)(const char * buff, int len, TL_Session& session);
+class TL_Session: public tidp::TL_ThreadLock, public boost::enable_shared_from_this<TL_Session> {
 public:
-	TL_Session();
+	//TL_Session();
+	explicit TL_Session(int fd, int port, const string& ip);
 	virtual ~TL_Session();
-	int getfd() const;
-	void read();
-	bool authentication();
-	unsigned int getSessionId();
-	void initIpPort();
-	std::string getIp();
-	int getPort();
+	bool isConnected();
+	void setParseFun(ParseFunt* fun);
+	int getFd();
+	//void setMyEvIo(struct ev_io *my_io);
+	void setServerId(unsigned int sid);
+	unsigned int getServerId();
+	void setSessionId(unsigned int sid);
+	unsigned int getSessionId() const;
+	void setServer(TL_Server* server);
+	TL_Server * getServer();
+	int read();
+	int sendByLocked(const string& buff);
+	int send(const string& buff);
+	int send(const char * buff,int len);
 	void close();
-	void setProtocolFun(Fn fn);
-	void setAuthenFun(Fn fn);
-	Fn getAuthenFun();
-	Fn getProtocolFun();
-	TL_Socket& getSocket();
-	std::string& getRecvBufferRef();
-	unsigned int getSequence();
-	unsigned int incSequence();
-	void setUptime(time_t t);
-	time_t getUptime();
-	time_t getConnTimeAt();
-	void setSessionType(int type);
-	int getSessionType();
-protected:
-	TL_Session(const TL_Session& orig);
-	TL_Session& operator =(const TL_Session&);
-
-	friend class TL_SessionMgr;
+	void unregister();
+	static TL_Session * createSession(int fd, int port, const string& ip);
+	TL_PacketPtr& getCurrentPacket();
+	TL_PacketPtr getNewPacket();
+	struct TL_SessionCmp {
+		bool operator ()(const TL_SessionPtr& r, const TL_SessionPtr& l) {
+			return r->_ip < l->_ip || (r->_ip == l->_ip && r->_port < l->_port);
+		}
+	};
 private:
-	Fn _fn; //协议解析函数
-	Fn _af;
-	unsigned int _sessionid; //sessionid
-	TL_Socket _socket; //socket
-	std::string _ip; //ip
-	uint16_t _port; //port
-	std::string _recvbuffer; //缓冲
-	time_t _last_uptime; //最后更新时间
-	time_t _connect_timeat; //连接时间
-	// std::string _sendbuffer;
-	// std::string _apacket;
-	unsigned int _sequenceid; //发送序列
-	int _session_type;
-	char _buffer[2048];
+	//int _errno;
+	//struct ev_io * _my_io;
+	int _recv_len;
+	char *_recv_buff;
+	int _retry_cnt; //重试次数，>0的情况下，需要等待对方返回确认包。
+	int _sockfd;
+	int _port; //
+	unsigned int _server_id;
+	unsigned int _session_id;
+	unsigned int _message_id;
+	ParseFunt * _parse_fn;
+	TL_Server * _server;
+	string _ip;
+	//string auth; //认证id
+	TL_PacketPtr _packetPtr;
 };
 
 /**
- * session 管理类
- * session 的创建由外部new 其销毁交给管理类
+ * LTV : length | type | version | command | message id | value
+ *        4 | 4 | 4 | 4 | 8 | stream
+ *        type: 0-approve 1-request 2-request_ack 3-response 4-response_ack
  */
-class TL_SessionMgr: public TL_ThreadLock {
-public:
-	typedef const std::map<unsigned int, TL_Session*> SESSION_QUEUE_T;
-	TL_SessionMgr();
-	virtual ~TL_SessionMgr();
 
-	void registSession(TL_Session* session);
-	void registSessionByNolock(TL_Session* session);
-	void addAuthenSession(TL_Session* session);
-
-	//void addTempSession(TL_Session* session);
-	/**
-	 * removeSession 删除注册的session
-	 * @param session
-	 * @param isdestory 是否自动销毁,默认不销毁,由用户自己把握
-	 */
-	void unregistSession(TL_Session* session, bool isdestory = false);
-	/**
-	 * destorySession 删除注册的session 并自动销毁session
-	 * @param session
-	 */
-	void destorySession(TL_Session* session);
-	/**
-	 * 支持select模型的io
-	 * @param rfds
-	 * @param wfds
-	 * @param efds
-	 * @param max_fd
-	 */
-	void clearInvalidSession();
-	void clear();
-	void close(int type);
-	void closeTimeout(time_t uptime);
-	int selectMode(fd_set* rfds, fd_set*wfds, fd_set* efds);
-	//遍历读取
-	void selectRead(fd_set* rfds);
-	void selectError(fd_set* rfds);
-	/**
-	 *
-	 * @param sessionid
-	 * @return
-	 */
-	//TL_Session* getSessionById(unsigned int sessionid);
-	//发送数据到指定的session,
-	int send(unsigned int sessionid, const std::string& data);
-	int send(unsigned int sessionid, const char * data, int len);
-	int sendByLock(unsigned int sessionid, const char * data, int len);
-	bool hasSessionByIp(const std::string& ip);
-	unsigned int getSessionIdByIp(const std::string& ip, int itype = -1);
-	bool getSessionIdByIp(const std::string& ip, std::list<TL_Session*>& slist);
-	TL_Session* getSessionById(const unsigned int sessionid);
-
-	const std::map<unsigned int, TL_Session*>& getSessions() const {
-		return _sessions;
-	}
-
-	void setUptime(time_t now) {
-		_last_update_time = now;
-	}
-	time_t getUptime() {
-		return _last_update_time;
-	}
-private:
-	std::map<unsigned int, TL_Session*> _sessions;
-	std::set<TL_Session*> _authen_session; //临时session,未认证session
-	//ip对session的索引
-	std::map<std::string, std::list<TL_Session*> > _ipsessions;
-
-	//unsigned int _auto_increment_sessionid;
-	unsigned int _auto_inc_id;
-	//unsigned int _min_sessionid;
-protected:
-	time_t _last_update_time;
-	TL_SessionMgr(const TL_SessionMgr& orig);
-	TL_SessionMgr& operator=(const TL_SessionMgr&);
+struct TL_SessionData {
+	unsigned int try_cnt; //尝试发送次数
+	unsigned int messige_id; //信息ID 由发送方生成
+	time_t recv_time; //接受数据时间
+	time_t send_time; //发送时间
+	string recv_data; //接受数据
+	string send_data; //发送数据
+	TL_SessionPtr session; //连接会话
+	TL_SessionData(TL_SessionPtr& session_param);
 };
 }
-#endif	/* TL_SESSION_H */
-
+#endif /* TCONNECTSESSION_H_ */

@@ -12,7 +12,7 @@
 
 //#include "TL_Server.h"
 
-#include "TL_Cgi.h"
+//#include "TL_Cgi.h"
 namespace tidp {
 //default TL_Execute is echo.
 class TL_Execute {

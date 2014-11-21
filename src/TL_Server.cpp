@@ -127,7 +127,7 @@ void TL_Server::run() {
 		for (int i = 0; i < ret; ++i) {
 			if (_events[i].events & EPOLLERR) {
 				cout << "EPOLLERR:" << endl;
-				const TL_Session2Ptr& sessionPtr = *(TL_Session2Ptr*) _events[i].data.ptr;
+				const TL_SessionPtr& sessionPtr = *(TL_SessionPtr*) _events[i].data.ptr;
 				epoll_ctl(_epfd, EPOLL_CTL_DEL, sessionPtr->getFd(), NULL);
 				removeSession(sessionPtr);
 				//sessionPtr->unregister();
@@ -145,12 +145,12 @@ void TL_Server::run() {
 					char client_addr_in[INET_ADDRSTRLEN] = { '\0' };
 					inet_ntop(PF_INET, &p->sin_addr, client_addr_in, sizeof(client_addr_in));
 					int client_port = ntohs(p->sin_port);
-					TL_Session2Ptr pt = TL_Session2Ptr(
-							TL_Session2::createSession(client_sock, client_port, client_addr_in));
+					TL_SessionPtr pt = TL_SessionPtr(
+							TL_Session::createSession(client_sock, client_port, client_addr_in));
 					pt->setSessionId(getSessionId());
 					addSession(pt);
 				} else {
-					const TL_Session2Ptr& sessionPtr = *(TL_Session2Ptr*) _events[i].data.ptr;
+					const TL_SessionPtr& sessionPtr = *(TL_SessionPtr*) _events[i].data.ptr;
 					int ret = sessionPtr->read();
 					if (ret < 0 || (ret == 0 && errno != EAGAIN)) {
 						//cout << "read:" << ret << endl;
@@ -179,11 +179,11 @@ void TL_Server::run() {
 
  TL_Server * server = (TL_Server *) w->data;
  if (client_sock > 0) {
- server->addSession(TL_Session2Ptr(TL_Session2::createSession(client_sock, client_port, client_addr_in)));
+ server->addSession(TL_SessionPtr(TL_Session::createSession(client_sock, client_port, client_addr_in)));
  }
  }
  void TL_Server::readCB(EV_P_ ev_io *w, int revents) {
- TL_Session2Ptr & session = *(TL_Session2Ptr*) (w->data);
+ TL_SessionPtr & session = *(TL_SessionPtr*) (w->data);
  int ret = -1;
  try {
  ret = session->read();
@@ -208,17 +208,17 @@ void TL_Server::setExecuteFactory(const TL_ExecuteFactoryPtr& factory_ptr) {
 TL_ExecutePtr TL_Server::getExecute(unsigned int command_id) {
 	return _execute_factory_ptr->create(command_id);
 }
-const TL_Session2Ptr& TL_Server::addSession(const TL_Session2Ptr& session) {
+const TL_SessionPtr& TL_Server::addSession(const TL_SessionPtr& session) {
 	//判断sessionid的唯一性，防止冲突
 	unsigned int session_id = session->getSessionId();
-	map<unsigned int, TL_Session2Ptr>::const_iterator it = _id_sessions.find(session_id);
+	map<unsigned int, TL_SessionPtr>::const_iterator it = _id_sessions.find(session_id);
 	while (it != _id_sessions.end()) {
 		session_id = getSessionId();
 		it = _id_sessions.find(session_id);
 	}
 	session->setSessionId(session_id);
 	_id_sessions[session_id] = session;
-	const TL_Session2Ptr& sessionRef = _id_sessions[session_id];
+	const TL_SessionPtr& sessionRef = _id_sessions[session_id];
 
 	struct epoll_event ev;
 	ev.data.ptr = (void*) &sessionRef;
@@ -238,7 +238,7 @@ const TL_Session2Ptr& TL_Server::addSession(const TL_Session2Ptr& session) {
 	sessionRef->setServer(this);
 	return sessionRef;
 }
-void TL_Server::removeSession(const TL_Session2Ptr& session) {
+void TL_Server::removeSession(const TL_SessionPtr& session) {
 	//cout << "rm Session:" << session->getSessionId() << "|" << session << "|" << _id_sessions.size() << "|"
 	//		<< session.use_count() << endl;
 	//Lock lk(*this);
@@ -248,15 +248,15 @@ void TL_Server::removeSession(const TL_Session2Ptr& session) {
 	session->close();
 	//cout << "rm Session:" << _id_sessions.size() << "|" << session.use_count() << endl;
 	return;
-	//TL_Session2Ptr tmp = session;
+	//TL_SessionPtr tmp = session;
 }
 
-TL_Session2Ptr TL_Server::getSessionPtr(unsigned int session_id) {
-	map<unsigned int, TL_Session2Ptr>::const_iterator it = _id_sessions.find(session_id);
+TL_SessionPtr TL_Server::getSessionPtr(unsigned int session_id) {
+	map<unsigned int, TL_SessionPtr>::const_iterator it = _id_sessions.find(session_id);
 	if (it != _id_sessions.end()) {
 		return it->second;
 	}
-	return TL_Session2Ptr();
+	return TL_SessionPtr();
 }
 TL_PacketPtr TL_Server::getPacket() {
 	//tidp::TL_ThreadDataPool<TL_Packet>::Lock lk(_data_pool);

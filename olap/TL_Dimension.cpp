@@ -179,6 +179,32 @@ const string& TL_Dimension::getLevelName(int level) {
 	}
 	return _levelnames[level];
 }
+TL_Dimension::dim_id_t TL_Dimension::getCounter() {
+	return _did;
+}
+
+
+
+void TL_Dimension::display(ostream& os) {
+	//just for test;
+	//map<dim_bit_t, map<vector<did_t>, did_t, TL_VecCmp<did_t> > > _dimmap;
+	map<dim_bit_t, map<vector<did_t>, did_t, TL_VecCmp<did_t> > >::const_iterator it = _dimmap.begin();
+	while (it != _dimmap.end()) {
+		const map<vector<did_t>, did_t, TL_VecCmp<did_t> >& dim_did_map = it->second;
+		map<vector<did_t>, did_t, TL_VecCmp<did_t> >::const_iterator it2 = dim_did_map.begin();
+		while (it2 != dim_did_map.end()) {
+			os << "<" << it->first << "|";
+			const vector<did_t>& v = it2->first;
+			size_t s = v.size();
+			for (size_t i = 0; i < s; ++i) {
+				os << _keys[v[i]] << "(" << v[i] << ")" << "|";
+			}
+			os << ">";
+			++it2;
+		}
+		++it;
+	}
+}
 //private function
 TL_Dimension::dim_id_t TL_Dimension::getDimID() {
 	return ++_did;

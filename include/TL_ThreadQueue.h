@@ -17,6 +17,7 @@ class TL_ThreadQueue: public TL_ThreadLock {
 public:
 
 	TL_ThreadQueue() {
+		_size = 0;
 	}
 public:
 
@@ -48,6 +49,7 @@ public:
 		}
 		t = _queue.front();
 		_queue.pop_front();
+		--_size;
 		return true;
 	}
 
@@ -55,6 +57,7 @@ public:
 		Lock lk(*this);
 		_queue.push_back(t);
 		notifyAll();
+		++_size;
 	}
 
 	void push_back(const queue_type &qt) {
@@ -64,13 +67,15 @@ public:
 		while (it != it_end) {
 			_queue.push_back(*it);
 			++it;
-			notifyAll();
 		}
+		_size += qt.size();
+		notifyAll();
 	}
 
 	void push_front(const T& t) {
 		Lock lk(*this);
 		notifyAll();
+		++_size;
 		_queue.push_front(t);
 	}
 
@@ -81,8 +86,9 @@ public:
 		while (it != it_end) {
 			_queue.push_front(*it);
 			++it;
-			notifyAll();
 		}
+		_size += qt.size();
+		notifyAll();
 	}
 
 	bool swap(queue_type &q, size_t millsecond = 0);
@@ -90,6 +96,10 @@ public:
 	size_t size() const {
 		Lock lk(*this);
 		return _queue.size();
+	}
+
+	size_t size2() const {
+		return _size;
 	}
 
 	void clear() {
@@ -109,6 +119,7 @@ public:
 protected:
 
 	queue_type _queue;
+	size_t _size;
 	//TL_ThreadLock _lock;
 };
 }

@@ -22,12 +22,12 @@ void TL_ExecuteThread::run() {
 		try {
 			//从server中获取数据包
 			_server->getRequest(_packet);
-			it = _cmd_cache.find(_packet->command_id);
+			it = _cmd_cache.find(_packet->head.packCmdId);
 			if (it == _cmd_cache.end()) {
-				TL_ExecutePtr executePtr = _server->getExecute(_packet->command_id);//TL_ExecutePtr(TL_ExecuteFactory::create(_packet->command_id));
+				TL_ExecutePtr executePtr = _server->getExecute(_packet->head.packCmdId);//TL_ExecutePtr(TL_ExecuteFactory::create(_packet->command_id));
 
-				_cmd_cache[_packet->command_id] = executePtr;
-				it = _cmd_cache.find(_packet->command_id);
+				_cmd_cache[_packet->head.packCmdId] = executePtr;
+				it = _cmd_cache.find(_packet->head.packCmdId);
 			}
 			TL_ExecutePtr & executePtr = it->second;
 			executePtr->execute(_packet);

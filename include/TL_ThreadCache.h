@@ -46,7 +46,7 @@ public:
 	//强制清除。 可能带来一些问题。
 
 	void clear() {
-		TL_ThreadLock::Lock lk(*this);
+		Lock lk(*this);
 		typename std::set<T*>::iterator it = busy.begin();
 		while (it != busy.end()) {
 			CreatePolicy<T>::destory(*it);
@@ -90,7 +90,7 @@ public:
 	/**
 	 todo 未测试
 	 */
-	void getByNum(T** r, int num) {
+	void getByNum22(T** r, int num) {
 		return;
 		//todo
 		TL_ThreadLock::Lock lk(*this);

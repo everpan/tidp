@@ -49,6 +49,7 @@ public:
 	void replace(char *bitmap, int bitmapByteLen, const char **p, int len);
 
 	//const TL_MetricPtr& get(const char **p, int len);
+
 	const TL_MetricPtr& get(const DefinedPtr& def,const char **p, int len);
 	void clear();
 
@@ -57,8 +58,6 @@ private:
 	void createDimension(int dim_num);
 	//void create
 private:
-	char * _bitmap;
-	char * _update_bitmap;
 	mid_t _mid;
 	int _max_dimention_num;
 	//int _dimention_num; //调用接口时候的维度个数
@@ -66,10 +65,8 @@ private:
 	int _metric_num; //度量个数
 
 	vector<TL_Metric_ParseFun_t> _metric_parse_funs;
-	vector<int> _dim_metric_width; //all,d1...dn,m
-	//vector<int> _set_dimension_bitmap;
+	vector<int> _dim_metric_width;
 	vector<TL_DimensionPtr> _dimensions;
-	//vector<int> _dim_positions; //位置和个数交替
 	map<mid_bit_t, map<vector<dim_t>, TL_MetricPtr, TL_VecCmp<dim_t> > > _cube;
 	vector<dim_t> _dims_tmp; //更新临时变量
 };

@@ -79,6 +79,14 @@ void TL_KeyLiner::getMap(const set<kid_t>& kids, map<kid_t, const key_t *>& ikma
 	}
 }
 
+const TL_KeyLiner::index_t & TL_KeyLiner::getIndex() const {
+	return _ikindex;
+}
+
+const TL_KeyLiner::keyvalue_t& TL_KeyLiner::getKeyValue() const {
+	return _kimap;
+}
+
 void TL_KeyLiner::add(const vector<key_t>& keys, vector<kid_t>& kids) {
 	kids.clear();
 	vector<key_t>::const_iterator it = keys.begin();
@@ -102,6 +110,14 @@ void TL_KeyLiner::get(const vector<key_t>& keys, vector<kid_t>& kids) {
 		++it;
 	}
 }
+
+TL_KeyLiner::kid_t TL_KeyLiner::operator[](const key_t& key) {
+	return get(key);
+}
+const TL_KeyLiner::key_t& TL_KeyLiner::operator[](const kid_t& kid) {
+	return get(kid);
+}
+
 //private function
 TL_KeyLiner::kid_t TL_KeyLiner::getKID() {
 	return ++_kid;

@@ -111,7 +111,9 @@ public:
 	const string& getHierarchyName();
 	void setLevelName(int level, const string& lname);
 	const string& getLevelName(int level);
+	dim_id_t getCounter();
 
+	void display(ostream& os);
 private:
 	dim_id_t getDimID();
 private:

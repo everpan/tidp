@@ -14,6 +14,7 @@
 #include <map>
 #include <iostream>
 #include <sstream>
+#include "TL_Pool.h"
 #include "TL_Exp.h"
 namespace tidp {
 
@@ -101,6 +102,9 @@ namespace tidp {
         MYSQL _mysql;
         bool _isconnected;
     };
+#ifndef TL_MYSQLPOOL_H
+    typedef TL_Pool<TL_Mysql>::Ptr TL_MysqlPtr;
+#endif
 }
 #endif	/* TL_MYSQL_H */
 

@@ -20,6 +20,9 @@ class TL_KeyLiner {
 public:
 	typedef unsigned int kid_t;
 	typedef string key_t;
+	typedef map<key_t, kid_t> keyvalue_t;
+	typedef map<kid_t, const key_t *> index_t;
+
 	TL_KeyLiner();
 	virtual ~TL_KeyLiner();
 
@@ -35,15 +38,20 @@ public:
 	void erase(const kid_t kid);
 	//提供多个编号，取得对应编号的值
 	void getMap(const set<kid_t>& kids, map<kid_t, const key_t *>& ikmap);
-
+	const index_t & getIndex() const;
+	const keyvalue_t& getKeyValue() const;
 	void add(const vector<key_t>& keys, vector<kid_t>& kids);
 	void get(const vector<key_t>& keys, vector<kid_t>& kids);
+
+	kid_t operator[](const key_t& key);
+	const key_t& operator[](const kid_t& kid);
+
 private:
 	kid_t getKID();
 private:
 	kid_t _kid;
-	map<key_t, kid_t> _kimap;
-	map<kid_t, const key_t *> _ikindex;
+	keyvalue_t _kimap;
+	index_t _ikindex;
 };
 
 } /* namespace tidp */

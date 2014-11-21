@@ -11,12 +11,8 @@ namespace tidp {
 
 TL_MultiDimension::TL_MultiDimension() {
 	_max_dimention_num = 0;
-	//_dimention_num = 0;
-	//_dimention_bitmap = 0;
 	_metric_num = 0;
 	_mid = 0;
-	_bitmap = NULL;
-	_update_bitmap = NULL;
 }
 
 TL_MultiDimension::~TL_MultiDimension() {
@@ -88,40 +84,7 @@ void TL_MultiDimension::setMetricParseFunction(const vector<TL_Metric_ParseFun_t
 	}
 	_metric_parse_funs = mf;
 }
-//设定在更新的过程中，字段解析位置位图
-/*
- void TL_MultiDimension::setDimensionBitmap(const vector<int> &bm) {
- if ((int) bm.size() > _max_dimention_num) {
- throw TL_Exception("TL_MultiDimension bitmap size is excess", -1);
- }
- _dim_positions.clear();
- int pos = 0;
- int bnum = 0;
- _dim_positions.push_back(pos); //位置偏移
- _dimention_bitmap = 0;
- for (int i = 0; i < (int) bm.size(); ++i) {
- bnum = calBits(bm[i]);
- if (bnum > 0) {
- _dimention_bitmap |= (1 << i);
- }
- if (bnum > _dim_metric_width[i]) {
- //宽度超限制
- _dim_positions.clear();
- ostringstream os;
- os << "TL_MultiDimension dimension[" << i << "] width=" << _dim_metric_width[i] << ", setBitmap width="
- << bnum << " is excess";
- throw TL_Exception(os.str(), -1);
- }
- _dim_positions.push_back(bm[i]); //bitmap
- _dim_positions.push_back(bnum); //个数
- _dim_positions.push_back(pos += bnum); //下一个位置偏移,最后一个为度量位置偏移
- }
- //随着接口变化。
- _dimention_num = bm.size();
- //_set_dimension_bitmap = bm;//
- //度量值不可空缺
- _dim_positions.push_back(_metric_num);
- }*/
+
 TL_MultiDimension::DefinedPtr TL_MultiDimension::getDefined(const vector<int> &dim_bitmap) {
 	if ((int) dim_bitmap.size() > _max_dimention_num) {
 		throw TL_Exception("TL_MultiDimension bitmap size is excess", -1);
@@ -207,15 +170,13 @@ void TL_MultiDimension::replace(const DefinedPtr& defptr, const char ** p, int l
 	}
 	_dims_tmp.clear();
 	_dims_tmp.reserve(def._dimention_count);
-	register int i = 0;
-	register int dnum = def._dimention_count * 3;
+	int i = 0;
+	int dnum = def._dimention_count * 3;
 	const int * posp;
 	for (; i < dnum; i += 3) {
 		if (def._positions_count_levelbitmap[i + 1] > 0) {	//bitmap
 			TL_DimensionPtr & ptr = _dimensions[i];
-			// p + _dim_positions[i] ??????
 			posp = &def._positions_count_levelbitmap[i];
-			//_dims_tmp.push_back(ptr->add(_dim_positions[i + 1], p + _dim_positions[i], _dim_positions[i + 2]));
 			_dims_tmp.push_back(ptr->add(posp[1], p + posp[0], posp[2]));
 		}
 	}
