@@ -53,6 +53,7 @@ TL_Thread::TL_Thread() :
 }
 
 TL_Thread::~TL_Thread() {
+	_running = 0;
 }
 
 pthread_t TL_Thread::id() {
@@ -63,7 +64,8 @@ void TL_Thread::threadEntry(TL_Thread * pThread) {
 	pThread->_running = 1;
 	{
 		TL_ThreadLock::Lock lock(pThread->_lock);
-		pThread->_lock.notifyAll();
+		//20150106 通知创建者，本君已经就绪，并打算执行。
+		pThread->_lock.notify();//All();
 	}
 
 	try {
@@ -81,18 +83,21 @@ void TL_Thread::threadEntry(TL_Thread * pThread) {
 TL_ThreadControl TL_Thread::start() {
 	TL_ThreadLock::Lock lock(_lock);
 	if (_running) {
-		throw TL_Exp("[TL_Thread::start] thread has started.");
+		throw TL_Exception("[TL_Thread::start] thread has started.",-1);
 	}
 	int ret = pthread_create(&_threadid, 0, (void *(*)(void*)) & threadEntry, (void*) this);
 
 	if (ret != 0) {
-		throw TL_Exp("[TL_Thread::start] thread start error", ret);
+		throw TL_Exception("[TL_Thread::start] thread start error", ret);
 	}
 	//20140810 ever 这里wait的意义是？忘记了
 	_lock.wait();
+	//20150105 ever 等待子线程创建ok 并通知，确保返回后子线程是已经创建的
 	return TL_ThreadControl(_threadid);
 }
-
+void TL_Thread::stop() {
+	_running = 0;
+}
 bool TL_Thread::isRunning() const {
 	return _running == 1;
 }

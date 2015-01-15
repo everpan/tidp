@@ -43,6 +43,7 @@ public:
 	bool isRunning() const;
 	bool needJoin() const;
 	TL_ThreadControl start();
+	void stop();
 	void static threadEntry(TL_Thread * pThread);
 	TL_ThreadControl getControl() const;
 	TL_ThreadLock& getThreadLockRef();

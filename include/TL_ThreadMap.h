@@ -41,6 +41,7 @@ namespace tidp {
         size_t size(){
             return _m.size();
         }
+        //不安全
         const std::map<K, V>& getMapRef() const{
             return _m;
         }

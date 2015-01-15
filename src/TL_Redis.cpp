@@ -18,7 +18,7 @@ TL_Redis::TL_Redis() {
 	_data_start = _read_cache;
 
 	_port = 6379;
-	if ((_epfd = epoll_create1(EPOLL_CLOEXEC)) == -1) {
+	if ((_epfd = epoll_create(10)) == -1) {
 		throw TL_Exception("epoll_create1 fail.", errno);
 	}
 }

@@ -21,7 +21,6 @@
 #include <set>
 #include <list>
 
-#include "TL_Object.h"
 #include "TL_Exp.h"
 
 #undef TL_LITTLE_ENDIAN

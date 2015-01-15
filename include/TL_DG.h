@@ -51,6 +51,7 @@ public:
 	}
 
 	NodePtr find(const T& n);
+	void addNode(const T& only);
 	void addNode(const T& prev, const T & next);
 	void rmNode(const T&);
 
@@ -90,7 +91,11 @@ typename DGCLASS::NodePtr DGCLASS::find(const T& n) {
 		return NodePtr();
 	}
 }
-
+template<class T>
+void DGCLASS::addNode(const T& only){
+	//NodePtr pt = find(only);
+	_nodes.insert(NodePtr(new Node(only)));
+}
 template<class T>
 void DGCLASS::addNode(const T& prev, const T & next) {
 	NodePtr pt = find(prev);

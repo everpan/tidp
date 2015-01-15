@@ -103,7 +103,7 @@ namespace tidp {
         bool _isconnected;
     };
 #ifndef TL_MYSQLPOOL_H
-    typedef TL_Pool<TL_Mysql>::Ptr TL_MysqlPtr;
+    typedef TL_Pool<TL_Mysql>::ScopePtr TL_MysqlPtr;
 #endif
 }
 #endif	/* TL_MYSQL_H */

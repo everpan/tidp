@@ -1,13 +1,14 @@
-/* 
- * File:   TL_Socket.cpp
- * Author: everpan
- * 
- * Created on 2011年3月15日, 上午11:35
+/*
+ * TL_Socket.cpp
+ *
+ *  Created on: Dec 27, 2014
+ *      Author: ever
  */
 
-#include <iostream>
+#include <net/TL_Socket.h>
 
-#include "TL_Socket.h"
+namespace tidp {
+namespace net {
 #ifdef __CYGWIN__
 //http://www.cygwin.com/ml/cygwin/2004-04/msg00532.html
 int gethostbyname_r(const char *name,
@@ -120,10 +121,8 @@ int gethostbyname_r(const char *name,
 }
 #endif
 
-namespace tidp {
-
 TL_Socket::TL_Socket() :
-		_socket(INVALID_SOCKET), _bautoclose(true), _sock_type(AF_INET) {
+		_socket(INVALID_SOCKET), _bautoclose(true), _sock_type(AF_INET), _port(-2) {
 }
 
 TL_Socket::~TL_Socket() {
@@ -151,7 +150,7 @@ void TL_Socket::createSocket(int iSocketType, int sock_type) {
 
 	if (_socket < 0) {
 		_socket = INVALID_SOCKET;
-		throw TL_Socket_Exception("[TL_Socket::createSocket] create socket error! :" + std::string(strerror(errno)));
+		throw TL_Exception("[TL_Socket::createSocket] create socket error!", errno);
 	}
 }
 
@@ -186,7 +185,7 @@ void TL_Socket::getPeerName(std::string &sPathName) {
 
 void TL_Socket::getPeerName(struct sockaddr *pstPeerAddr, socklen_t &iPeerLen) {
 	if (getpeername(_socket, pstPeerAddr, &iPeerLen) < 0) {
-		throw TL_Socket_Exception("[TL_Socket::getPeerName] getpeername error.", errno);
+		throw TL_Exception("[TL_Socket::getPeerName] getpeername error.", errno);
 	}
 }
 
@@ -221,29 +220,34 @@ void TL_Socket::getSockName(std::string &sPathName) {
 
 void TL_Socket::getSockName(struct sockaddr *pstSockAddr, socklen_t &iSockLen) {
 	if (getsockname(_socket, pstSockAddr, &iSockLen) < 0) {
-		throw TL_Socket_Exception("[TL_Socket::getSockName] getsockname error.", errno);
+		throw TL_Exception("[TL_Socket::getSockName] getsockname error.", errno);
 	}
 }
 
 int TL_Socket::accept(TL_Socket &tcSock, struct sockaddr *pstSockAddr, socklen_t &iSockLen) {
-	//std::cout << tcSock._socket << "|" << INVALID_SOCKET << std::endl;
 	assert(tcSock._socket == INVALID_SOCKET);
 
 	int ifd;
 
-	while ((ifd = ::accept(_socket, pstSockAddr, &iSockLen)) < 0 && errno == EINTR)
-		;
-
+	while ((ifd = ::accept(_socket, pstSockAddr, &iSockLen)) < 0 && errno == EINTR);
+	if(ifd < 0){
+		return ifd;
+	}
 	tcSock._socket = ifd;
 	tcSock._sock_type = _sock_type;
 
+	char client_addr_in[INET_ADDRSTRLEN+16] = { '\0' };
+	struct sockaddr_in *p = (struct sockaddr_in*) pstSockAddr;
+	inet_ntop(PF_INET, &p->sin_addr, client_addr_in, sizeof(client_addr_in));
+	tcSock._ip = client_addr_in;
+	tcSock._port = ntohs(p->sin_port);
 	return tcSock._socket;
 }
 
 void TL_Socket::parseAddr(const std::string &sAddr, struct in_addr &stSinAddr) {
 	int iRet = inet_pton(AF_INET, sAddr.c_str(), &stSinAddr);
 	if (iRet < 0) {
-		throw TL_Socket_Exception("[TL_Socket::parseAddr] inet_pton error.", errno);
+		throw TL_Exception("[TL_Socket::parseAddr] inet_pton error.", errno);
 	} else if (iRet == 0) {
 		/*
 		 * struct hostent stHostent;
@@ -251,11 +255,10 @@ void TL_Socket::parseAddr(const std::string &sAddr, struct in_addr &stSinAddr) {
 		 char buf[2048] = "\0";
 		 */
 		//int iError;
-
 		//gethostbyname_r(sAddr.c_str(), &stHostent, buf, sizeof (buf), &pstHostent, &iError);
 		struct hostent *pstHostent = gethostbyname(sAddr.c_str()); //, &stHostent, buf, sizeof (buf), &pstHostent, &iError);
 		if (pstHostent == NULL) {
-			throw TL_Socket_Exception("[TL_Socket::parseAddr] gethostbyname_r error! :" + std::string(hstrerror(errno)));
+			throw TL_Exception("[TL_Socket::parseAddr] gethostbyname_r error!",errno);
 		} else {
 			stSinAddr = *(struct in_addr *) pstHostent->h_addr;
 		}
@@ -278,11 +281,12 @@ void TL_Socket::bind(const std::string &sServerAddr, int port) {
 	} else {
 		parseAddr(sServerAddr, p->sin_addr);
 	}
-
+	_ip = sServerAddr;
+	_port = port;
 	try {
 		bind(&stBindAddr, sizeof(stBindAddr));
 	} catch (...) {
-		throw TL_Socket_Exception("[TL_Socket::bind] bind '" + sServerAddr + ":" + "' error.", errno);
+		throw TL_Exception("[TL_Socket::bind] bind '" + sServerAddr + ":" + "' error.", errno);
 	}
 }
 
@@ -295,11 +299,12 @@ void TL_Socket::bind(const char *sPathName) {
 	bzero(&stBindAddr, sizeof(struct sockaddr_un));
 	stBindAddr.sun_family = _sock_type;
 	strncpy(stBindAddr.sun_path, sPathName, sizeof(stBindAddr.sun_path));
-
+	_ip = sPathName;
+	_port = 0;
 	try {
 		bind((struct sockaddr *) &stBindAddr, sizeof(stBindAddr));
 	} catch (...) {
-		throw TL_Socket_Exception("[TL_Socket::bind] bind '" + std::string(sPathName) + "' error.", errno);
+		throw TL_Exception("[TL_Socket::bind] bind '" + std::string(sPathName) + "' error.", errno);
 	}
 }
 
@@ -311,7 +316,7 @@ void TL_Socket::bind(struct sockaddr *pstBindAddr, socklen_t iAddrLen) {
 	setSockOpt(SO_REUSEADDR, (const void *) &iReuseAddr, sizeof(int), SOL_SOCKET);
 
 	if (::bind(_socket, pstBindAddr, iAddrLen) < 0) {
-		throw TL_Socket_Exception("[TL_Socket::bind] bind error.", errno);
+		throw TL_Exception("[TL_Socket::bind] bind error.", errno);
 	}
 }
 
@@ -320,13 +325,14 @@ void TL_Socket::close() {
 		::close(_socket);
 		_socket = INVALID_SOCKET;
 	}
+	_port = -2;
 }
 
 int TL_Socket::connectNoThrow(const std::string &sServerAddr, uint16_t port) {
 	assert(_sock_type == AF_INET);
 
 	if (sServerAddr == "") {
-		throw TL_Socket_Exception("[TL_Socket::connect] server address is empty!");
+		throw TL_Exception("[TL_Socket::connect] server address is empty!",-1);
 	}
 
 	struct sockaddr stServerAddr;
@@ -351,14 +357,14 @@ void TL_Socket::connect(const std::string &sServerAddr, uint16_t port) {
 	int ret = connectNoThrow(sServerAddr, port);
 
 	if (ret < 0) {
-		throw TL_SocketConnect_Exception("[TL_Socket::connect] connect error", errno);
+		throw TL_Exception("connect error", errno);
 	}
 }
 
 void TL_Socket::connect(const char *sPathName) {
 	int ret = connectNoThrow(sPathName);
 	if (ret < 0) {
-		throw TL_SocketConnect_Exception("[TL_Socket::connect] connect error", errno);
+		throw TL_Exception("connect error", errno);
 	}
 }
 
@@ -380,7 +386,7 @@ int TL_Socket::connect(struct sockaddr *pstServerAddr, socklen_t serverLen) {
 
 void TL_Socket::listen(int iConnBackLog) {
 	if (::listen(_socket, iConnBackLog) < 0) {
-		throw TL_Socket_Exception("[TL_Socket::listen] listen error.", errno);
+		throw TL_Exception("listen error.", errno);
 	}
 }
 
@@ -441,7 +447,7 @@ int TL_Socket::sendto(const void *pvBuf, size_t iLen, struct sockaddr *pstToAddr
 
 void TL_Socket::shutdown(int iHow) {
 	if (::shutdown(_socket, iHow) < 0) {
-		throw TL_Socket_Exception("[TL_Socket::shutdown] shutdown error.", errno);
+		throw TL_Exception("shutdown error.", errno);
 	}
 }
 
@@ -471,7 +477,7 @@ void TL_Socket::setNoCloseWait() {
 	stLinger.l_linger = 0; //容许逗留的时间为0秒
 
 	if (setSockOpt(SO_LINGER, (const void *) &stLinger, sizeof(linger), SOL_SOCKET) == -1) {
-		throw TL_Socket_Exception("[TL_Socket::setNoCloseWait] error", errno);
+		throw TL_Exception("[TL_Socket::setNoCloseWait] error", errno);
 	}
 }
 
@@ -481,7 +487,7 @@ void TL_Socket::setCloseWait(int delay) {
 	stLinger.l_linger = delay; //容许逗留的时间为delay秒
 
 	if (setSockOpt(SO_LINGER, (const void *) &stLinger, sizeof(linger), SOL_SOCKET) == -1) {
-		throw TL_Socket_Exception("[TL_Socket::setCloseWait] error", errno);
+		throw TL_Exception("[TL_Socket::setCloseWait] error", errno);
 	}
 }
 
@@ -491,7 +497,7 @@ void TL_Socket::setCloseWaitDefault() {
 	stLinger.l_linger = 0;
 
 	if (setSockOpt(SO_LINGER, (const void *) &stLinger, sizeof(linger), SOL_SOCKET) == -1) {
-		throw TL_Socket_Exception("[TL_Socket::setCloseWaitDefault] error", errno);
+		throw TL_Exception("[TL_Socket::setCloseWaitDefault] error", errno);
 	}
 }
 
@@ -499,20 +505,20 @@ void TL_Socket::setTcpNoDelay() {
 	int flag = 1;
 
 	if (setSockOpt(TCP_NODELAY, (char*) &flag, int(sizeof(int)), IPPROTO_TCP) == -1) {
-		throw TL_Socket_Exception("[TL_Socket::setTcpNoDelay] error", errno);
+		throw TL_Exception("[TL_Socket::setTcpNoDelay] error", errno);
 	}
 }
 
 void TL_Socket::setKeepAlive() {
 	int flag = 1;
 	if (setSockOpt(SO_KEEPALIVE, (char*) &flag, int(sizeof(int)), SOL_SOCKET) == -1) {
-		throw TL_Socket_Exception("[TL_Socket::setKeepAlive] error", errno);
+		throw TL_Exception("[TL_Socket::setKeepAlive] error", errno);
 	}
 }
 
 void TL_Socket::setSendBufferSize(int sz) {
 	if (setSockOpt(SO_SNDBUF, (char*) &sz, int(sizeof(int)), SOL_SOCKET) == -1) {
-		throw TL_Socket_Exception("[TL_Socket::setSendBufferSize] error", errno);
+		throw TL_Exception("[TL_Socket::setSendBufferSize] error", errno);
 	}
 }
 
@@ -520,7 +526,7 @@ int TL_Socket::getSendBufferSize() {
 	int sz;
 	socklen_t len = sizeof(sz);
 	if (getSockOpt(SO_SNDBUF, (void*) &sz, len, SOL_SOCKET) == -1 || len != sizeof(sz)) {
-		throw TL_Socket_Exception("[TL_Socket::getSendBufferSize] error", errno);
+		throw TL_Exception("[TL_Socket::getSendBufferSize] error", errno);
 	}
 
 	return sz;
@@ -528,7 +534,7 @@ int TL_Socket::getSendBufferSize() {
 
 void TL_Socket::setRecvBufferSize(int sz) {
 	if (setSockOpt(SO_RCVBUF, (char*) &sz, int(sizeof(int)), SOL_SOCKET) == -1) {
-		throw TL_Socket_Exception("[TL_Socket::setRecvBufferSize] error", errno);
+		throw TL_Exception("[TL_Socket::setRecvBufferSize] error", errno);
 	}
 }
 
@@ -536,7 +542,7 @@ int TL_Socket::getRecvBufferSize() {
 	int sz;
 	socklen_t len = sizeof(sz);
 	if (getSockOpt(SO_RCVBUF, (void*) &sz, len, SOL_SOCKET) == -1 || len != sizeof(sz)) {
-		throw TL_Socket_Exception("[TL_Socket::getRecvBufferSize] error", errno);
+		throw TL_Exception("[TL_Socket::getRecvBufferSize] error", errno);
 	}
 
 	return sz;
@@ -546,7 +552,7 @@ void TL_Socket::setblock(int fd, bool bBlock) {
 	int val = 0;
 
 	if ((val = fcntl(fd, F_GETFL, 0)) == -1) {
-		throw TL_Socket_Exception("[TL_Socket::setblock] fcntl [F_GETFL] error.", errno);
+		throw TL_Exception("[TL_Socket::setblock] fcntl [F_GETFL] error.", errno);
 	}
 
 	if (!bBlock) {
@@ -556,7 +562,7 @@ void TL_Socket::setblock(int fd, bool bBlock) {
 	}
 
 	if (fcntl(fd, F_SETFL, val) == -1) {
-		throw TL_Socket_Exception("[TL_Socket::setblock] fcntl [F_SETFL] error.", errno);
+		throw TL_Exception("[TL_Socket::setblock] fcntl [F_SETFL] error.", errno);
 	}
 }
 
@@ -564,7 +570,7 @@ void TL_Socket::setCloExec(int fd, bool bCloExec) {
 	int val = 0;
 
 	if ((val = fcntl(fd, F_GETFL, 0)) == -1) {
-		throw TL_Socket_Exception("[TL_Socket::setCloExec] fcntl [F_GETFL] error.", errno);
+		throw TL_Exception("[TL_Socket::setCloExec] fcntl [F_GETFL] error.", errno);
 	}
 
 	if (bCloExec) {
@@ -574,13 +580,13 @@ void TL_Socket::setCloExec(int fd, bool bCloExec) {
 	}
 
 	if (fcntl(fd, F_SETFL, val) == -1) {
-		throw TL_Socket_Exception("[TL_Socket::setCloExec] fcntl [F_SETFL] error.", errno);
+		throw TL_Exception("[TL_Socket::setCloExec] fcntl [F_SETFL] error.", errno);
 	}
 }
 
 void TL_Socket::createPipe(int fds[2], bool bBlock) {
 	if (::pipe(fds) != 0) {
-		throw TL_Socket_Exception("[TL_Socket::createPipe] error.", errno);
+		throw TL_Exception("[TL_Socket::createPipe] error.", errno);
 	}
 
 	try {
@@ -609,7 +615,7 @@ std::vector<std::string> TL_Socket::getLocalHosts() {
 
 		if (rs == -1) {
 			free(ifc.ifc_buf);
-			throw TL_Socket_Exception("[TL_Socket::getLocalHosts] ioctl error.", errno);
+			throw TL_Exception("[TL_Socket::getLocalHosts] ioctl error.", errno);
 		} else if (ifc.ifc_len == old_ifc_len) {
 			break;
 		} else {
@@ -634,4 +640,6 @@ std::vector<std::string> TL_Socket::getLocalHosts() {
 	free(ifc.ifc_buf);
 	return result;
 }
-}
+
+} /* namespace net */
+} /* namespace tidp */
