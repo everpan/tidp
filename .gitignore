@@ -1,12 +1,1 @@
-
-*.d
-
-*.o
-
-.cproject
-
-.project
-
-.settings/*
-
-/Debug/*
+/build/

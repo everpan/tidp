@@ -6,7 +6,7 @@
  */
 
 #ifndef TL_MYSQL_H
-#define	TL_MYSQL_H
+#define TL_MYSQL_H
 #include <stdio.h>
 #include <mysql.h>
 #include <errmsg.h>
@@ -18,6 +18,14 @@
 #include "TL_Exp.h"
 namespace tidp {
 
+    struct TL_MysqlConf {
+        int port;
+        std::string hostname;
+        std::string username;
+        std::string password;
+        std::string dbname{""};
+    };
+
     class TL_Mysql {
     public:
         TL_Mysql();
@@ -27,7 +35,7 @@ namespace tidp {
 
         class TL_MysqlRes {
         public:
-            friend class TL_MysqlRow;
+            //friend class TL_MysqlRow;
 
             typedef struct {
                 MYSQL_ROW rows;
@@ -56,7 +64,7 @@ namespace tidp {
             void dataSeek(long long offset = 0);
             const std::map<std::string, int>& getField() const;
 
-            TL_MysqlRes &operator = (const TL_MysqlRes & res);
+            TL_MysqlRes &operator=(const TL_MysqlRes & res);
 
         private:
 
@@ -76,7 +84,8 @@ namespace tidp {
         bool connect(const std::string& hostname,
                 const std::string& username,
                 const std::string& password,
-                int port = 3306, const std::string& dbname="");
+                int port = 3306, const std::string& dbname = "");
+        bool connect(const TL_MysqlConf & conf);
         bool reConnect();
 
         bool isConnect();
@@ -93,12 +102,7 @@ namespace tidp {
     protected:
         TL_Mysql(const TL_Mysql& orig);
     private:
-        //int iner_query(const char * query, unsigned qlen);
-        std::string _hostname;
-        std::string _username;
-        std::string _password;
-        int _port;
-        std::string _dbname;
+        TL_MysqlConf _conf;
         MYSQL _mysql;
         bool _isconnected;
     };
@@ -106,5 +110,5 @@ namespace tidp {
     typedef TL_Pool<TL_Mysql>::ScopePtr TL_MysqlPtr;
 #endif
 }
-#endif	/* TL_MYSQL_H */
+#endif /* TL_MYSQL_H */
 

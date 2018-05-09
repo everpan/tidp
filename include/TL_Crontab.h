@@ -14,22 +14,25 @@
 #include <stdio.h>
 
 namespace tidp {
-using namespace std;
-class TL_Crontab {
-public:
-	struct symbol {
-		char type;
-		char value;
-		int pos;
-	};
-	TL_Crontab();
-	virtual ~TL_Crontab();
-	static const char* TYPE2FMTSTR[6];
+    using namespace std;
 
-	static std::string parseErrStr(const std::string& str, int pos, int line);
-	static string parse(const string& rawstr);
-	static bool check(const std::string& conf, const char* tm);
-};
+    class TL_Crontab {
+    public:
+
+        struct symbol {
+            char type;
+            char value;
+            int pos;
+        };
+        TL_Crontab();
+        virtual ~TL_Crontab();
+        static const char* TYPE2FMTSTR[6];
+
+        static std::string parseErrStr(const std::string& str, int pos, int line);
+        static string parse(const string& rawstr);
+        static void parse(const string& rawstr,string& result);
+        static bool check(const std::string& conf, const char* tm);
+    };
 
 } /* namespace tidp */
 

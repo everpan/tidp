@@ -14,7 +14,11 @@
 #include <set>
 #include <map>
 
+#if USE_BOOST
 #include <boost/shared_ptr.hpp>
+#else
+#include <memory>
+#endif
 
 using namespace std;
 
@@ -33,7 +37,7 @@ public:
 			return node < other.node;
 		}
 	};
-	typedef boost::shared_ptr<Node> NodePtr;
+	typedef shared_ptr<Node> NodePtr;
 	struct NodePtrCmp {
 		bool operator()(const NodePtr& n1, const NodePtr& n2) const {
 			return *n1 < *n2;

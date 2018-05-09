@@ -8,9 +8,17 @@
 #ifndef TL_POOL_H_
 #define TL_POOL_H_
 
+#include "config.h"
+#if USE_BOOST
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
+using namespace boost;
+#else
+#include <memory>
+#include <functional>
+//namespace boost=std;
+#endif
 #include <set>
 #include "TL_Singleton.h"
 using namespace std;
@@ -74,7 +82,6 @@ public:
 
 		}
 		~ScopePtr() {
-			//TL_Pool<T, C>::getInstance()->release(_t);
 			pool()->release(_t);
 			_t = NULL;
 		}
@@ -148,7 +155,7 @@ public:
 		T * _t;
 	};
 */
-	typedef typename boost::function<void(T *)> init_function_t;
+	typedef function<void(T *)> init_function_t;
 	void setInitFunction(init_function_t f) {
 		_init_fun = f;
 	}

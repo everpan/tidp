@@ -94,9 +94,6 @@ void TL_Redis::flush() {
 			}
 		}
 	}
-//	cout << "send:";
-//	coutCmd(string(_send_cache, _send_len));
-//	cout << endl;
 	_send_len = 0;
 }
 

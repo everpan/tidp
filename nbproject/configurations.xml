@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles" displayName="头文件" projectFiles="true">
+      <itemPath>include/TL_Cgi.h</itemPath>
+      <itemPath>include/TL_Client.h</itemPath>
+      <itemPath>include/TL_Command.h</itemPath>
+      <itemPath>include/TL_Common.h</itemPath>
+      <itemPath>include/TL_Crontab.h</itemPath>
+      <itemPath>include/TL_DG.h</itemPath>
+      <itemPath>include/TL_Datetime.h</itemPath>
+      <itemPath>include/TL_DictMap.h</itemPath>
+      <itemPath>include/TL_Elapsed.h</itemPath>
+      <itemPath>include/TL_Exp.h</itemPath>
+      <itemPath>include/TL_Factory.h</itemPath>
+      <itemPath>include/TL_Functor.h</itemPath>
+      <itemPath>include/TL_Http.h</itemPath>
+      <itemPath>include/TL_HttpRequest.h</itemPath>
+      <itemPath>include/TL_HttpResponse.h</itemPath>
+      <itemPath>include/TL_IniFile.h</itemPath>
+      <itemPath>include/TL_List.h</itemPath>
+      <itemPath>include/TL_Lock.h</itemPath>
+      <itemPath>include/TL_Logger.h</itemPath>
+      <itemPath>include/TL_Loki.h</itemPath>
+      <itemPath>include/TL_MD5.h</itemPath>
+      <itemPath>include/TL_MemQueue.h</itemPath>
+      <itemPath>include/TL_MemString.h</itemPath>
+      <itemPath>include/TL_Mmap.h</itemPath>
+      <itemPath>include/TL_Monitor.h</itemPath>
+      <itemPath>include/TL_Mysql.h</itemPath>
+      <itemPath>include/TL_MysqlPool.h</itemPath>
+      <itemPath>include/TL_Option.h</itemPath>
+      <itemPath>include/TL_Pool.h</itemPath>
+      <itemPath>include/TL_Redis.h</itemPath>
+      <itemPath>include/TL_RelationMgr.h</itemPath>
+      <itemPath>include/TL_Rlog.h</itemPath>
+      <itemPath>include/TL_Singleton.h</itemPath>
+      <itemPath>include/TL_StringBuffer.h</itemPath>
+      <itemPath>include/TL_TSD.h</itemPath>
+      <itemPath>include/TL_Thread.h</itemPath>
+      <itemPath>include/TL_ThreadCache.h</itemPath>
+      <itemPath>include/TL_ThreadLock.h</itemPath>
+      <itemPath>include/TL_ThreadMap.h</itemPath>
+      <itemPath>include/TL_ThreadQueue.h</itemPath>
+      <itemPath>include/TL_TimerProvide.h</itemPath>
+      <itemPath>include/TL_Type.h</itemPath>
+      <itemPath>include/TL_TypeList.h</itemPath>
+      <itemPath>include/TL_TypeTraits.h</itemPath>
+      <itemPath>include/config.h</itemPath>
+      <itemPath>include/net</itemPath>
+    </logicalFolder>
+    <logicalFolder name="SourceFiles" displayName="源文件" projectFiles="true">
+      <itemPath>src/TL_Cgi.cpp</itemPath>
+      <itemPath>src/TL_Client.cpp</itemPath>
+      <itemPath>src/TL_Command.cpp</itemPath>
+      <itemPath>src/TL_Common.cpp</itemPath>
+      <itemPath>src/TL_Crontab.cpp</itemPath>
+      <itemPath>src/TL_Datetime.cpp</itemPath>
+      <itemPath>src/TL_Elapsed.cpp</itemPath>
+      <itemPath>src/TL_Exp.cpp</itemPath>
+      <itemPath>src/TL_Http.cpp</itemPath>
+      <itemPath>src/TL_HttpRequest.cpp</itemPath>
+      <itemPath>src/TL_HttpResponse.cpp</itemPath>
+      <itemPath>src/TL_IniFile.cpp</itemPath>
+      <itemPath>src/TL_Logger.cpp</itemPath>
+      <itemPath>src/TL_MD5.cpp</itemPath>
+      <itemPath>src/TL_MemQueue.cpp</itemPath>
+      <itemPath>src/TL_MemString.cpp</itemPath>
+      <itemPath>src/TL_Mmap.cpp</itemPath>
+      <itemPath>src/TL_Mysql.cpp</itemPath>
+      <itemPath>src/TL_MysqlPool.cpp</itemPath>
+      <itemPath>src/TL_Option.cpp</itemPath>
+      <itemPath>src/TL_Redis.cpp</itemPath>
+      <itemPath>src/TL_Rlog.cpp</itemPath>
+      <itemPath>src/TL_StringBuffer.cpp</itemPath>
+      <itemPath>src/TL_Thread.cpp</itemPath>
+      <itemPath>src/TL_ThreadLock.cpp</itemPath>
+      <itemPath>src/TL_TimerProvide.cpp</itemPath>
+      <itemPath>src/net</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles" displayName="资源文件" projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="测试文件"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="重要文件"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>src</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="2">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <standard>8</standard>
+          <incDir>
+            <pElem>./include</pElem>
+            <pElem>/usr/local/mysql/include</pElem>
+          </incDir>
+        </ccTool>
+      </compileType>
+      <item path="include/TL_Cgi.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Client.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Command.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Common.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Crontab.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_DG.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Datetime.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_DictMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Elapsed.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Exp.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Factory.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Functor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Http.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_HttpRequest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_HttpResponse.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_IniFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_List.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Lock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Logger.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Loki.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_MD5.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_MemQueue.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_MemString.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Mmap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Monitor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Mysql.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_MysqlPool.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Option.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Pool.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Redis.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_RelationMgr.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Rlog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Singleton.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_StringBuffer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_TSD.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Thread.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_ThreadCache.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_ThreadLock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_ThreadMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_ThreadQueue.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_TimerProvide.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Type.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_TypeList.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_TypeTraits.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/config.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/net" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/TL_Cgi.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Client.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Command.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Common.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Crontab.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Datetime.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Elapsed.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Exp.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Http.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_HttpRequest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_HttpResponse.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_IniFile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Logger.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_MD5.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_MemQueue.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_MemString.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Mmap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Mysql.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_MysqlPool.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Option.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Redis.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Rlog.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_StringBuffer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Thread.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_ThreadLock.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_TimerProvide.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/net" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="2">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="include/TL_Cgi.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Client.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Command.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Common.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Crontab.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_DG.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Datetime.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_DictMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Elapsed.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Exp.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Factory.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Functor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Http.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_HttpRequest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_HttpResponse.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_IniFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_List.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Lock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Logger.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Loki.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_MD5.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_MemQueue.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_MemString.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Mmap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Monitor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Mysql.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_MysqlPool.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Option.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Pool.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Redis.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_RelationMgr.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Rlog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Singleton.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_StringBuffer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_TSD.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Thread.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_ThreadCache.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_ThreadLock.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_ThreadMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_ThreadQueue.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_TimerProvide.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_Type.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_TypeList.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/TL_TypeTraits.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/config.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/net" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/TL_Cgi.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Client.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Command.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Common.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Crontab.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Datetime.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Elapsed.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Exp.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Http.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_HttpRequest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_HttpResponse.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_IniFile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Logger.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_MD5.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_MemQueue.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_MemString.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Mmap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Mysql.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_MysqlPool.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Option.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Redis.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Rlog.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_StringBuffer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_Thread.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_ThreadLock.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/TL_TimerProvide.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/net" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
