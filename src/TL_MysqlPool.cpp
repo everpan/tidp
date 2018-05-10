@@ -6,6 +6,7 @@
  */
 
 #include "TL_MysqlPool.h"
+#if USE_MYSQL
 namespace tidp {
 
 TL_MysqlPool::TL_MysqlPool() {
@@ -85,3 +86,4 @@ void TL_MysqlPool::clear() {
 	_idle.clear();
 }
 }
+#endif

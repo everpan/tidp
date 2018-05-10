@@ -12,7 +12,7 @@
 #include "TL_Mysql.h"
 #include "TL_Singleton.h"
 #include "TL_Exp.h"
-
+#if USE_MYSQL
 namespace tidp {
 
     class TL_MysqlPool : public TL_Singleton<TL_MysqlPool>, public TL_ThreadLock {
@@ -79,4 +79,4 @@ namespace tidp {
 
 
 #endif /* TL_MYSQLPOOL_H */
-
+#endif

@@ -8,7 +8,7 @@
 #include "TL_TimerProvide.h"
 #define TL_TIMEPROVIDE_PIPE_PATH "/tmp/timeProvid.fifo"
 namespace tidp {
-
+#ifdef __linux__
 TL_TimerProvide::TL_TimerProvide() {
 	/*_fifo = mkfifo(TL_TIMEPROVIDE_PIPE_PATH, 0777);
 	 if (_fifo != 0) {
@@ -89,4 +89,5 @@ TL_Datetime TL_TimerProvide::getDatetime(){
 void TL_TimerProvide::updateDatetime(TL_Datetime& dt){
 	dt.setTime(_tv);
 }
+#endif
 } /* namespace tidp */

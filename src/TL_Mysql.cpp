@@ -6,7 +6,7 @@
  */
 
 #include "TL_Mysql.h"
-
+#if USE_MYSQL
 namespace tidp {
 
 TL_Mysql::TL_Mysql() {
@@ -288,3 +288,4 @@ TL_Mysql::TL_MysqlRes & TL_Mysql::TL_MysqlRes::operator=(
 
 }
 
+#endif

@@ -4,6 +4,8 @@
  *
  * Created on 2011年4月4日, 下午9:33
  */
+#include "config.h"
+#if USE_MYSQL
 
 #ifndef TL_MYSQL_H
 #define TL_MYSQL_H
@@ -112,3 +114,5 @@ namespace tidp {
 }
 #endif /* TL_MYSQL_H */
 
+
+#endif

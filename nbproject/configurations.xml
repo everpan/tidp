@@ -111,6 +111,11 @@
             <pElem>/usr/local/mysql/include</pElem>
           </incDir>
         </ccTool>
+        <linkerTool>
+          <linkerAddLib>
+            <pElem>/usr/local/mysql/lib</pElem>
+          </linkerAddLib>
+        </linkerTool>
       </compileType>
       <item path="include/TL_Cgi.h" ex="false" tool="3" flavor2="0">
       </item>

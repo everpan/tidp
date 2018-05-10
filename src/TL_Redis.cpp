@@ -6,7 +6,7 @@
  */
 
 #include <TL_Redis.h>
-
+#ifdef __linux__
 namespace tidp {
 
 TL_Redis::TL_Redis() {
@@ -522,3 +522,6 @@ void TL_Redis::coutCmd(const string &s) {
 }
 
 } /* namespace tidp */
+
+
+#endif

@@ -77,7 +77,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=-L/usr/local/mysql/lib
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}

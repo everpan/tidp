@@ -25,6 +25,7 @@
 #endif
 
 #include "TL_Common.h"
+#include "config.h"
 //#include <sstream>
 namespace tidp {
 using namespace std;
