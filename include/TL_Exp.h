@@ -34,7 +34,7 @@ private:
 	int _line_no;
 	int _code;
 };
-#define EXCEPTION(msg,ercode) throw tidp::TL_Exp(__FILE__,__LINE__,msg,ercode)
+#define EXCEPTION(msg,ercode) tidp::TL_Exp(__FILE__,__LINE__,msg,ercode)
 #define TL_Exception(msg,errcode) tidp::TL_Exp(__FILE__,__LINE__,__FUNCTION__,msg,errcode)
 }
 #endif	/* TL_EXP_H */

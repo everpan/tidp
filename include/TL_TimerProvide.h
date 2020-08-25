@@ -7,12 +7,15 @@
 
 #ifndef SRC_TL_TIMERPROVIDE_H_
 #define SRC_TL_TIMERPROVIDE_H_
+
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
 #ifdef __linux__
 //linux
 #include <sys/epoll.h>
+
 #endif
 
 #include <TL_Singleton.h>
@@ -25,18 +28,24 @@
 
 namespace tidp {
 
-class TL_TimerProvide: public TL_Singleton<TL_TimerProvide>, public TL_Datetime, public TL_Thread {
-public:
-	TL_TimerProvide();
-	virtual ~TL_TimerProvide();
-	static TL_TimerProvide * getInstance();
-	virtual void run();
-	TL_Datetime getDatetime();
-	void updateDatetime(TL_Datetime& dt);
-private:
-	//int _fifo;
-	int _epfd;
-};
+    class TL_TimerProvide : public TL_Singleton<TL_TimerProvide>, public TL_Datetime, public TL_Thread {
+    public:
+        TL_TimerProvide();
+
+        virtual ~TL_TimerProvide() noexcept(true) ;
+
+        static TL_TimerProvide *getInstance();
+
+        virtual void run();
+
+        TL_Datetime getDatetime();
+
+        void updateDatetime(TL_Datetime &dt);
+
+    private:
+        //int _fifo;
+        int _epfd;
+    };
 
 } /* namespace tidp */
 

@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.16)
 project(tidp)
 
 set(CMAKE_CXX_STANDARD 14)
+SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
 include_directories(.)
 include_directories(include)
@@ -9,61 +11,6 @@ include_directories(include/net)
 include_directories(olap)
 
 add_library(tidp
-        include/net/TL_Execute.h
-        include/net/TL_ExecuteFactory.h
-        include/net/TL_ExecuteThread.h
-        include/net/TL_ExecuteThreadFactory.h
-        include/net/TL_Packet.h
-        include/net/TL_PacketManger.h
-        include/net/TL_Server.h
-        include/net/TL_Session.h
-        include/net/TL_SessionManger.h
-        include/net/TL_Socket.h
-        include/config.h
-        include/TL_Cgi.h
-        include/TL_Client.h
-        include/TL_Command.h
-        include/TL_Common.h
-        include/TL_Crontab.h
-        include/TL_Datetime.h
-        include/TL_DG.h
-        include/TL_DictMap.h
-        include/TL_Elapsed.h
-        include/TL_Exp.h
-        include/TL_Factory.h
-        include/TL_Functor.h
-        include/TL_Http.h
-        include/TL_HttpRequest.h
-        include/TL_HttpResponse.h
-        include/TL_IniFile.h
-        include/TL_List.h
-        include/TL_Lock.h
-        include/TL_Logger.h
-        include/TL_Loki.h
-        include/TL_MD5.h
-        include/TL_MemQueue.h
-        include/TL_MemString.h
-        include/TL_Mmap.h
-        include/TL_Monitor.h
-        include/TL_Mysql.h
-        include/TL_MysqlPool.h
-        include/TL_Option.h
-        include/TL_Pool.h
-        include/TL_Redis.h
-        include/TL_RelationMgr.h
-        include/TL_Rlog.h
-        include/TL_Singleton.h
-        include/TL_StringBuffer.h
-        include/TL_Thread.h
-        include/TL_ThreadCache.h
-        include/TL_ThreadLock.h
-        include/TL_ThreadMap.h
-        include/TL_ThreadQueue.h
-        include/TL_TimerProvide.h
-        include/TL_TSD.h
-        include/TL_Type.h
-        include/TL_TypeList.h
-        include/TL_TypeTraits.h
         olap/TL_Cube.cpp
         olap/TL_Cube.h
         olap/TL_Dimension.cpp
@@ -109,6 +56,12 @@ add_library(tidp
         src/TL_StringBuffer.cpp
         src/TL_Thread.cpp
         src/TL_ThreadLock.cpp
-        src/TL_TimerProvide.cpp
-        TL_MultiLiner.h)
-add_link_options(tidp pthread)
+        src/TL_TimerProvide.cpp)
+#add_link_options(tidp pthread)
+
+## install
+target_include_directories(tidp PUBLIC ${CMAKE_SOURCE_DIR}/include)
+#set_target_properties(tidp PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/include)
+install(TARGETS tidp tidp)
+# install header files
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include DESTINATION tidp)
