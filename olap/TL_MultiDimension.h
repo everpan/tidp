@@ -11,12 +11,12 @@
 #include "TL_Dimension.h"
 #include "TL_Metric.h"
 #include "TL_Exp.h"
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace tidp {
 
-typedef boost::shared_ptr<TL_Dimension> TL_DimensionPtr;
-typedef boost::shared_ptr<TL_Metric> TL_MetricPtr;
+typedef std::shared_ptr<TL_Dimension> TL_DimensionPtr;
+typedef std::shared_ptr<TL_Metric> TL_MetricPtr;
 
 class TL_MultiDimension {
 public:
@@ -31,7 +31,7 @@ public:
 		int _dimention_count; //包含维度个数，不能大于cube中的定义个数
 		vector<int> _positions_count_levelbitmap; //位置|个数|维度级别bitmap,交替出现
 	};
-	typedef boost::shared_ptr<Defined> DefinedPtr;
+	typedef std::shared_ptr<Defined> DefinedPtr;
 	TL_MultiDimension();
 	virtual ~TL_MultiDimension();
 

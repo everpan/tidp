@@ -11,7 +11,7 @@
 #include <net/TL_Packet.h>
 #include <TL_Logger.h>
 #include <TL_Thread.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <net/TL_ExecuteFactory.h>
 #include <map>
 namespace tidp {
@@ -31,7 +31,7 @@ private:
 	TL_Server * _server;
 	TL_ExecuteFactoryPtr _execute_factory;
 };
-typedef boost::shared_ptr<TL_ExecuteThread> TL_ExecuteThreadPtr;
+typedef std::shared_ptr<TL_ExecuteThread> TL_ExecuteThreadPtr;
 } /* namespace net */
 } /* namespace tidp */
 

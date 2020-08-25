@@ -8,15 +8,14 @@
 #ifndef INCLUDE_NET_TL_PACKETMANGER_H_
 #define INCLUDE_NET_TL_PACKETMANGER_H_
 #include <set>
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
+#include <functional>
 
 #include <net/TL_Packet.h>
 #include <TL_ThreadLock.h>
 
 namespace tidp {
 namespace net {
-typedef boost::function<void(TL_Packet*)> packetReleaseFun;
+typedef std::function<void(TL_Packet*)> packetReleaseFun;
 class TL_PacketManger : public TL_ThreadLock{
 public:
 	TL_PacketManger();

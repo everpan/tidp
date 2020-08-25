@@ -14,7 +14,7 @@ static void TL_SessionPtrInitFunDefault(TL_SessionPtr& ptr) {
 }
 TL_SessionManger::TL_SessionManger() {
 	_initFn = TL_SessionPtrInitFunDefault;
-	_releasFn = boost::bind(&TL_SessionManger::releaseRawPtr, this, _1);
+	_releasFn = std::bind(&TL_SessionManger::releaseRawPtr, this, std::placeholders::_1);
 }
 
 TL_SessionManger::~TL_SessionManger() {

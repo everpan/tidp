@@ -33,7 +33,7 @@ namespace net {
 #include <errno.h>
 
 
-typedef boost::function<int(string&,TL_PacketPtr&)> ParseFun;
+typedef std::function<int(string&,TL_PacketPtr&)> ParseFun;
 class TL_Server: public TL_Thread {
 public:
 	TL_Server();

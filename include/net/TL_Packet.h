@@ -7,12 +7,12 @@
 
 #ifndef INCLUDE_NET_TL_PACKET_H_
 #define INCLUDE_NET_TL_PACKET_H_
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace tidp {
 namespace net {
 class TL_Session;
-typedef boost::shared_ptr<TL_Session> TL_SessionPtr;
+typedef std::shared_ptr<TL_Session> TL_SessionPtr;
 
 class TL_Packet {
 public:
@@ -29,7 +29,7 @@ public:
 	std::string send_data;
 	TL_SessionPtr session;
 };
-typedef boost::shared_ptr<TL_Packet> TL_PacketPtr;
+typedef std::shared_ptr<TL_Packet> TL_PacketPtr;
 } /* namespace net */
 } /* namespace tidp */
 

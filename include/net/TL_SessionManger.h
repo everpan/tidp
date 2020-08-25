@@ -9,18 +9,17 @@
 #define INCLUDE_TL_SESSIONMANGER_H_
 #include <set>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/bind.hpp>
-#include <boost/function.hpp>
+#include <memory>
+#include <functional>
 #include <net/TL_Session.h>
 #include <TL_Logger.h>
 #include <TL_ThreadLock.h>
 #include <TL_Logger.h>
 namespace tidp {
 namespace net {
-typedef boost::shared_ptr<TL_Session> TL_SessionPtr;
-typedef boost::function<void (TL_SessionPtr& ptr)> TL_SessionPtrInitFun;
-typedef boost::function<void (TL_Session* ptr) > TL_SessionReleaseFun;
+typedef std::shared_ptr<TL_Session> TL_SessionPtr;
+typedef std::function<void (TL_SessionPtr& ptr)> TL_SessionPtrInitFun;
+typedef std::function<void (TL_Session* ptr) > TL_SessionReleaseFun;
 struct TL_SessionPtrLess{
 	bool operator ()(const TL_SessionPtr& x,const TL_SessionPtr& y){
 		return x.get() < y.get();
