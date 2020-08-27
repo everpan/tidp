@@ -64,4 +64,4 @@ target_include_directories(tidp PUBLIC ${CMAKE_SOURCE_DIR}/include)
 #set_target_properties(tidp PROPERTIES PUBLIC_HEADER ${CMAKE_SOURCE_DIR}/include)
 install(TARGETS tidp tidp)
 # install header files
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/include DESTINATION tidp)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION include/tidp)
